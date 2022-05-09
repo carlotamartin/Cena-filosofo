@@ -16,10 +16,6 @@ class window ():
   def imprimir(self, texto):
     self.texto.insert(tk.END, str(texto) + '\n')
   
-  def ocultar(self):
-      self.withdraw()
-  def mostrar(self):
-      self.deiconify()
   def run(self):
     self.window.mainloop()
   
