@@ -1,17 +1,16 @@
-import tkinter as tk
-
-from clases.filosofo import filosofo
+from filosofo import *
+from ventana import window
 
 if __name__=="__main__":
+  window = window()
   
 
-window = tk.Tk()
-window.title("La cena de los filósofos")
-window.geometry("300x300")
+  lista=[]
+  for i in range(N):
+      lista.append(filosofo(window)) #AGREGA UN FILOSOFO A LA LISTA
 
-hello = tk.Label(text="Hello world!")
-hello.pack()
-button = tk.Button(text="Click me!")
-button.pack()
-
-tk.mainloop()
+  for f in lista:
+      f.start() #ES EQUIVALENTE A RUN()
+  window.run()
+  for f in lista:
+      f.join() #BLOQUEA HASTA QUE TERMINA EL THREAD

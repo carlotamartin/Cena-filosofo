@@ -1,6 +1,7 @@
 import time
 import random
 import threading
+from ventana import window
 
 N = 5
 TIEMPO_TOTAL = 3
@@ -11,22 +12,25 @@ class filosofo(threading.Thread):
     tenedores = [] #ARRAY DE SEMAFOROS PARA SINCRONIZAR ENTRE FILOSOFOS, MUESTRA QUIEN ESTA EN COLA DEL TENEDOR
     count=0
 
-    def __init__(self):
+    def __init__(self, window):
         super().__init__()      #HERENCIA
+        self.window = window  #creamos la ventana
         self.id=filosofo.count #DESIGNA EL ID AL FILOSOFO
         filosofo.count+=1 #AGREGA UNO A LA CANT DE FILOSOFOS
         filosofo.estado.append('PENSANDO') #EL FILOSOFO ENTRA A LA MESA EN ESTADO PENSANDO
         filosofo.tenedores.append(threading.Semaphore(0)) #AGREGA EL SEMAFORO DE SU TENEDOR( TENEDOR A LA IZQUIERDA)
-        print("FILOSOFO {0} - PENSANDO".format(self.id))
+        #Ahora en vez de imprimir por pantalla a los filósofos pensando lo imprimiremos por medio de Tkinter con la función imprimir
+        self.window.imprimir("FILOSOFO {0} - PENSANDO".format(self.id))
 
     def __del__(self):
-        print("FILOSOFO {0} - Se para de la mesa".format(self.id))  #NECESARIO PARA SABER CUANDO TERMINA EL THREAD
+        
+        self.window.imprimir("FILOSOFO {0} - Se para de la mesa".format(self.id))  #NECESARIO PARA SABER CUANDO TERMINA EL THREAD
 
     def pensar(self):
         time.sleep(random.randint(0,5)) #CADA FILOSOFO SE TOMA DISTINTO TIEMPO PARA PENSAR, ALEATORIO
 
     def derecha(self,i):
-        return (i-1)%N  #BUSCAMOS EL INDICE DE LA DERECHA
+        return (i-1)%N #BUSCAMOS EL INDICE DE LA DERECHA
 
     def izquierda(self,i):
         return(i+1)%N #BUSCAMOS EL INDICE DE LA IZQUIERDA
@@ -51,9 +55,9 @@ class filosofo(threading.Thread):
         filosofo.semaforo.release() #YA TERMINO DE MANIPULAR TENEDORES
 
     def comer(self):
-        print("FILOSOFO {} COMIENDO".format(self.id))
+        self.window.imprimir("FILOSOFO {} COMIENDO".format(self.id))
         time.sleep(2) #TIEMPO ARBITRARIO PARA COMER
-        print("FILOSOFO {} TERMINO DE COMER".format(self.id))
+        self.window.imprimir("FILOSOFO {} TERMINO DE COMER".format(self.id))
 
     def run(self):
         for i in range(TIEMPO_TOTAL):
@@ -61,3 +65,14 @@ class filosofo(threading.Thread):
             self.tomar() #AGARRA LOS TENEDORES CORRESPONDIENTES
             self.comer() #COME
             self.soltar() #SUELTA LOS TENEDORES
+
+def main():
+    lista=[]
+    for i in range(N):
+        lista.append(filosofo()) #AGREGA UN FILOSOFO A LA LISTA
+
+    for f in lista:
+        f.start() #ES EQUIVALENTE A RUN()
+
+if __name__=="__main__":
+    main()
