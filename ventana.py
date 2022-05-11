@@ -13,6 +13,8 @@ class window ():
     self.scroll.config (command= self.texto.yview)
     self.scroll.pack(side = tk.RIGHT, fill=tk.Y)
 
+    
+    
   def imprimir(self, texto):
     self.texto.insert(tk.END, str(texto) + '\n')
   
